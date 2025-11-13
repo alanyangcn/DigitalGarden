@@ -8,8 +8,10 @@ export default defineNuxtConfig({
   // https://nuxt.com/modules
   modules: [
     '@nuxthub/core',
-    '@nuxt/eslint'
+    '@nuxt/eslint',
+    '@nuxt/ui'
   ],
+  css: ['~/assets/css/main.css'],
   hub: {
     database: true,
     kv: true,
@@ -24,4 +26,32 @@ export default defineNuxtConfig({
   },
   // Development
   devtools: { enabled: true },
+
+  // App configuration
+  app: {
+    head: {
+      title: 'Digital Garden',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'description', content: 'A beautiful space to cultivate your thoughts and share your knowledge.' }
+      ]
+    }
+  },
+
+  // UI Configuration
+  ui: {
+    primary: 'blue',
+    gray: 'slate'
+  },
+
+  // SEO Configuration
+  css: ['~/assets/css/main.css'],
+
+  // Route rules for admin authentication
+  routeRules: {
+    '/admin/**': {
+      middleware: 'admin-auth'
+    }
+  }
 })

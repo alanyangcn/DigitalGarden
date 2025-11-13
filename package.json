@@ -13,8 +13,9 @@
   },
   "dependencies": {
     "@nuxt/eslint": "^1.4.1",
+    "@nuxt/ui": "^4.1.0",
     "@nuxthub/core": "^0.9.0",
-    "nuxt": "^3.17.5"
+    "nuxt": "^4.2.1"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^1.4.1",
