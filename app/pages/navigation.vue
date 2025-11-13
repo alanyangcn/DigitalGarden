@@ -40,18 +40,34 @@
     <!-- 网站链接网格 -->
     <section class="py-12">
       <div class="container mx-auto px-4">
-        <div v-if="filteredLinks.length === 0" class="text-center py-12">
+        <!-- 加载状态 -->
+        <div v-if="loading" class="text-center py-12">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <div class="text-gray-500 mt-4">正在加载网址导航...</div>
+        </div>
+
+        <!-- 错误状态 -->
+        <div v-else-if="error" class="text-center py-12">
+          <div class="text-red-500 text-lg mb-4">{{ error }}</div>
+          <UButton @click="initializeData" color="primary" variant="outline">
+            重新加载
+          </UButton>
+        </div>
+
+        <!-- 空状态 -->
+        <div v-else-if="links.length === 0" class="text-center py-12">
           <div class="text-gray-400 text-lg">
             {{ searchQuery ? '没有找到匹配的网站' : '该分类下暂无网站' }}
           </div>
         </div>
 
+        <!-- 数据展示 -->
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           <div
-            v-for="link in filteredLinks"
+            v-for="link in links"
             :key="link.id"
             class="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200"
-            @click="openLink(link.url)"
+            @click="openLink(link.url, link.id)"
           >
             <div class="p-6">
               <!-- 网站图标和名称 -->
@@ -75,7 +91,7 @@
                     {{ link.name }}
                   </h3>
                   <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                    {{ getCategoryName(link.categoryId) }}
+                    {{ link.category?.name || getCategoryName(link.category_id) }}
                   </span>
                 </div>
               </div>
@@ -130,7 +146,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 
 // SEO 配置
 useSeoMeta({
@@ -142,214 +158,126 @@ useSeoMeta({
 // 响应式数据
 const searchQuery = ref('')
 const selectedCategory = ref('all')
+const categories = ref([])
+const links = ref([])
+const stats = ref({})
+const loading = ref(true)
+const error = ref(null)
 
-// 分类数据
-const categories = [
-  { id: 'all', name: '全部' },
-  { id: 'dev', name: '开发工具' },
-  { id: 'design', name: '设计资源' },
-  { id: 'productivity', name: '效率工具' },
-  { id: 'learning', name: '学习资源' },
-  { id: 'entertainment', name: '娱乐休闲' },
-  { id: 'news', name: '新闻资讯' },
-  { id: 'social', name: '社交媒体' }
-]
-
-// 网站链接数据
-const links = [
-  // 开发工具
-  {
-    id: 1,
-    name: 'GitHub',
-    url: 'https://github.com',
-    description: '全球最大的代码托管平台和开源社区',
-    icon: 'https://github.com/favicon.ico',
-    categoryId: 'dev',
-    tags: ['代码托管', '开源', '版本控制'],
-    domain: 'github.com'
-  },
-  {
-    id: 2,
-    name: 'Stack Overflow',
-    url: 'https://stackoverflow.com',
-    description: '程序员问答社区，解决编程问题的最佳平台',
-    icon: 'https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico',
-    categoryId: 'dev',
-    tags: ['问答', '编程', '技术'],
-    domain: 'stackoverflow.com'
-  },
-  {
-    id: 3,
-    name: 'MDN Web Docs',
-    url: 'https://developer.mozilla.org',
-    description: 'Web 技术文档，包括 HTML、CSS、JavaScript 等',
-    icon: 'https://developer.mozilla.org/favicon-48x48.png',
-    categoryId: 'dev',
-    tags: ['文档', 'Web技术', '学习'],
-    domain: 'developer.mozilla.org'
-  },
-  {
-    id: 4,
-    name: 'CodePen',
-    url: 'https://codepen.io',
-    description: '在线代码编辑器，前端开发者的 playground',
-    icon: 'https://cpwebassets.codepen.io/assets/favicon/favicon-touch-de50acbf5d634ec6791894eba4ba9cf490f709b3d742597c6fc4b734e6492a5a.png',
-    categoryId: 'dev',
-    tags: ['在线编辑', '前端', '展示'],
-    domain: 'codepen.io'
-  },
-
-  // 设计资源
-  {
-    id: 5,
-    name: 'Figma',
-    url: 'https://www.figma.com',
-    description: '协作式界面设计工具，支持实时协作',
-    icon: 'https://static.figma.com/app/icon/1/favicon.ico',
-    categoryId: 'design',
-    tags: ['UI设计', '协作', '原型'],
-    domain: 'figma.com'
-  },
-  {
-    id: 6,
-    name: 'Unsplash',
-    url: 'https://unsplash.com',
-    description: '免费高质量图片素材库',
-    icon: 'https://unsplash.com/favicon.ico',
-    categoryId: 'design',
-    tags: ['图片', '免费', '素材'],
-    domain: 'unsplash.com'
-  },
-  {
-    id: 7,
-    name: 'Dribbble',
-    url: 'https://dribbble.com',
-    description: '设计师作品展示和交流平台',
-    icon: 'https://cdn.dribbble.com/assets/dribbble-ball-icon-1e8c7a47e43585e5a858b639a78659aa090694a78e7491defe21451775c81e65.png',
-    categoryId: 'design',
-    tags: ['设计', '作品', '灵感'],
-    domain: 'dribbble.com'
-  },
-
-  // 效率工具
-  {
-    id: 8,
-    name: 'Notion',
-    url: 'https://www.notion.so',
-    description: 'All-in-one 工作空间，笔记、项目管理、知识库',
-    icon: 'https://www.notion.so/images/favicon.ico',
-    categoryId: 'productivity',
-    tags: ['笔记', '项目管理', '协作'],
-    domain: 'notion.so'
-  },
-  {
-    id: 9,
-    name: 'Trello',
-    url: 'https://trello.com',
-    description: '可视化项目管理工具，基于看板方法',
-    icon: 'https://trello.com/favicon.ico',
-    categoryId: 'productivity',
-    tags: ['项目管理', '看板', '协作'],
-    domain: 'trello.com'
-  },
-
-  // 学习资源
-  {
-    id: 10,
-    name: 'Coursera',
-    url: 'https://www.coursera.org',
-    description: '在线课程平台，与顶级大学合作提供课程',
-    icon: 'https://www.coursera.org/favicon.ico',
-    categoryId: 'learning',
-    tags: ['在线课程', '大学', '证书'],
-    domain: 'coursera.org'
-  },
-  {
-    id: 11,
-    name: 'Khan Academy',
-    url: 'https://www.khanacademy.org',
-    description: '免费在线教育平台，涵盖各种学科',
-    icon: 'https://cdn.kastatic.org/images/favicon.ico',
-    categoryId: 'learning',
-    tags: ['免费教育', '数学', '科学'],
-    domain: 'khanacademy.org'
-  },
-
-  // 娱乐休闲
-  {
-    id: 12,
-    name: 'YouTube',
-    url: 'https://www.youtube.com',
-    description: '全球最大的视频分享平台',
-    icon: 'https://www.youtube.com/favicon.ico',
-    categoryId: 'entertainment',
-    tags: ['视频', '娱乐', '学习'],
-    domain: 'youtube.com'
-  },
-
-  // 新闻资讯
-  {
-    id: 13,
-    name: 'Hacker News',
-    url: 'https://news.ycombinator.com',
-    description: '技术新闻和讨论社区',
-    icon: '/favicon.ico',
-    iconName: 'i-heroicons-newspaper',
-    categoryId: 'news',
-    tags: ['技术新闻', '讨论', '创业'],
-    domain: 'news.ycombinator.com'
-  },
-
-  // 社交媒体
-  {
-    id: 14,
-    name: 'Twitter',
-    url: 'https://twitter.com',
-    description: '实时信息和社交网络平台',
-    icon: 'https://abs.twimg.com/favicons/twitter.ico',
-    categoryId: 'social',
-    tags: ['社交', '实时信息', '微博'],
-    domain: 'twitter.com'
+// 获取分类数据
+const fetchCategories = async () => {
+  try {
+    const { data } = await $fetch('/api/navigation/categories')
+    return data || []
+  } catch (err) {
+    console.error('获取分类失败:', err)
+    return []
   }
-]
+}
+
+// 获取链接数据
+const fetchLinks = async (params = {}) => {
+  try {
+    const { data } = await $fetch('/api/navigation/links', {
+      query: params
+    })
+    return data || []
+  } catch (err) {
+    console.error('获取链接失败:', err)
+    return []
+  }
+}
+
+// 获取统计信息
+const fetchStats = async () => {
+  try {
+    const { data } = await $fetch('/api/navigation/stats')
+    return data || {}
+  } catch (err) {
+    console.error('获取统计信息失败:', err)
+    return {}
+  }
+}
+
+// 初始化数据
+const initializeData = async () => {
+  loading.value = true
+  error.value = null
+
+  try {
+    // 并行获取所有数据
+    const [categoriesData, linksData, statsData] = await Promise.all([
+      fetchCategories(),
+      fetchLinks(),
+      fetchStats()
+    ])
+
+    // 在分类列表前添加"全部"选项
+    categories.value = [
+      { id: 'all', name: '全部' },
+      ...categoriesData
+    ]
+
+    links.value = linksData
+    stats.value = statsData
+  } catch (err) {
+    error.value = '加载数据失败，请稍后重试'
+    console.error('初始化数据失败:', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+// 更新链接数据
+const updateLinks = async () => {
+  try {
+    const params = {
+      category: selectedCategory.value === 'all' ? undefined : selectedCategory.value,
+      search: searchQuery.value.trim() || undefined
+    }
+
+    links.value = await fetchLinks(params)
+  } catch (err) {
+    console.error('更新链接失败:', err)
+    error.value = '加载数据失败，请稍后重试'
+  }
+}
+
+// 监听搜索和分类变化
+watch([searchQuery, selectedCategory], updateLinks, { debounce: 300 })
 
 // 计算属性
-const filteredLinks = computed(() => {
-  let filtered = links
-
-  // 按分类筛选
-  if (selectedCategory.value !== 'all') {
-    filtered = filtered.filter(link => link.categoryId === selectedCategory.value)
-  }
-
-  // 按搜索关键词筛选
-  if (searchQuery.value.trim()) {
-    const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(link =>
-      link.name.toLowerCase().includes(query) ||
-      link.description.toLowerCase().includes(query) ||
-      link.tags?.some(tag => tag.toLowerCase().includes(query)) ||
-      link.domain.toLowerCase().includes(query)
-    )
-  }
-
-  return filtered
-})
-
-const totalLinks = computed(() => links.length)
+const totalLinks = computed(() => stats.value.totalLinks || 0)
 
 const lastUpdated = computed(() => {
+  if (stats.value.lastUpdated) {
+    return new Date(stats.value.lastUpdated).toLocaleDateString('zh-CN')
+  }
   return new Date().toLocaleDateString('zh-CN')
 })
 
 // 方法
 const getCategoryName = (categoryId) => {
-  const category = categories.find(cat => cat.id === categoryId)
+  const category = categories.value.find(cat => cat.id === categoryId)
   return category ? category.name : '其他'
 }
 
-const openLink = (url) => {
-  window.open(url, '_blank', 'noopener,noreferrer')
+const openLink = async (url, linkId) => {
+  try {
+    // 记录点击次数
+    if (linkId) {
+      await $fetch(`/api/navigation/links/${linkId}/click`, {
+        method: 'POST'
+      })
+    }
+
+    // 打开链接
+    window.open(url, '_blank', 'noopener,noreferrer')
+  } catch (err) {
+    console.error('记录点击失败:', err)
+    // 即使记录失败也要打开链接
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
 }
 
 const handleIconError = (event) => {
@@ -360,6 +288,9 @@ const handleIconError = (event) => {
   defaultIcon.className = 'w-6 h-6 text-gray-400'
   parent.appendChild(defaultIcon)
 }
+
+// 页面加载时初始化数据
+onMounted(initializeData)
 </script>
 
 <style scoped>
