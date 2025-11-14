@@ -1,7 +1,19 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- 页面头部 -->
-    <section class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
+    <section class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16 relative">
+      <!-- 颜色模式切换按钮 -->
+      <div class="absolute top-4 right-4">
+        <UButton
+          :icon="$colorMode.value === 'dark' ? 'i-heroicons-sun' : 'i-heroicons-moon'"
+          variant="ghost"
+          color="white"
+          size="sm"
+          class="bg-white/10 backdrop-blur-sm hover:bg-white/20 border-white/20"
+          @click="$colorMode.preference = $colorMode.value === 'dark' ? 'light' : 'dark'"
+        />
+      </div>
+
       <div class="container mx-auto px-4 text-center">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">网址导航</h1>
         <p class="text-xl mb-8 text-blue-100">精选实用网站，让您的网络生活更便捷</p>
@@ -20,19 +32,34 @@
     </section>
 
     <!-- 分类筛选 -->
-    <section class="sticky top-0 z-10 bg-white border-b border-gray-200 py-4 backdrop-blur-sm bg-white/95">
+    <section class="sticky top-0 z-10 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4 backdrop-blur-sm bg-white/95 dark:bg-gray-800/95">
       <div class="container mx-auto px-4">
-        <div class="flex flex-wrap gap-2 justify-center">
-          <UButton
-            v-for="category in categories"
-            :key="category.id"
-            :variant="selectedCategory === category.id ? 'solid' : 'outline'"
-            :color="selectedCategory === category.id ? 'primary' : 'gray'"
-            @click="selectedCategory = category.id"
-            class="transition-all duration-200"
+        <div class="relative">
+          <!-- 左侧渐变遮罩 -->
+          <div class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-gray-800 to-transparent z-10 pointer-events-none"></div>
+
+          <!-- 右侧渐变遮罩 -->
+          <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-gray-800 to-transparent z-10 pointer-events-none"></div>
+
+          <!-- 滚动容器 -->
+          <div
+            ref="scrollContainer"
+            class="overflow-x-auto scrollbar-hide scroll-smooth cursor-grab active:cursor-grabbing"
+            @mousedown="handleMouseDown"
           >
-            {{ category.name }}
-          </UButton>
+            <div class="flex gap-2 whitespace-nowrap justify-center min-w-max px-4">
+              <UButton
+                v-for="category in categories"
+                :key="category.id"
+                :variant="selectedCategory === category.id ? 'solid' : 'outline'"
+                :color="selectedCategory === category.id ? 'primary' : 'gray'"
+                @click="selectedCategory = category.id"
+                class="transition-all duration-200 flex-shrink-0 select-none"
+              >
+                {{ category.name }}
+              </UButton>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -66,13 +93,13 @@
           <div
             v-for="link in links"
             :key="link.id"
-            class="group bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 cursor-pointer"
+            class="group bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-400 cursor-pointer"
             @click="openLink(link.url)"
           >
             <div class="p-4">
               <!-- 网站图标和名称 -->
               <div class="flex items-center mb-2">
-                <div class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center mr-2 group-hover:scale-105 transition-transform duration-200">
+                <div class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-2 group-hover:scale-105 transition-transform duration-200">
                   <img
                     v-if="link.icon"
                     :src="link.icon"
@@ -87,17 +114,17 @@
                   />
                 </div>
                 <div class="flex-1 min-w-0">
-                  <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200 truncate text-sm">
+                  <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 truncate text-sm">
                     {{ link.name }}
                   </h3>
-                  <span class="text-xs text-gray-500 truncate">
+                  <span class="text-xs text-gray-500 dark:text-gray-400 truncate">
                     {{ link.domain }}
                   </span>
                 </div>
               </div>
 
               <!-- 网站描述 -->
-              <p class="text-gray-600 text-xs mb-2 line-clamp-1">
+              <p class="text-gray-600 dark:text-gray-300 text-xs mb-2 line-clamp-1">
                 {{ link.description }}
               </p>
 
@@ -106,7 +133,7 @@
                 <span
                   v-for="tag in link.tags.slice(0, 3)"
                   :key="tag"
-                  class="text-xs bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded"
+                  class="text-xs bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded"
                 >
                   {{ tag }}
                 </span>
@@ -118,9 +145,9 @@
     </section>
 
     <!-- 页脚 -->
-    <footer class="bg-gray-800 text-white py-8 mt-16">
+    <footer class="bg-gray-800 dark:bg-gray-950 text-white py-8 mt-16">
       <div class="container mx-auto px-4 text-center">
-        <p class="text-gray-400">
+        <p class="text-gray-400 dark:text-gray-500">
           共收录 {{ totalLinks }} 个实用网站 |
           最后更新：{{ lastUpdated }}
         </p>
@@ -130,7 +157,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 
 // SEO 配置
 useSeoMeta({
@@ -146,6 +173,12 @@ const categories = ref([])
 const links = ref([])
 const loading = ref(true)
 const error = ref(null)
+
+// 拖拽滚动相关
+const scrollContainer = ref(null)
+const isDragging = ref(false)
+const startX = ref(0)
+const scrollLeft = ref(0)
 
 // 获取分类数据
 const fetchCategories = async () => {
@@ -235,6 +268,39 @@ const openLink = (url) => {
   window.open(url, '_blank', 'noopener,noreferrer')
 }
 
+// 拖拽滚动功能
+const handleMouseDown = (e) => {
+  if (!scrollContainer.value) return
+
+  isDragging.value = true
+  startX.value = e.pageX - scrollContainer.value.offsetLeft
+  scrollLeft.value = scrollContainer.value.scrollLeft
+
+  // 添加全局鼠标事件监听
+  document.addEventListener('mousemove', handleMouseMove)
+  document.addEventListener('mouseup', handleMouseUp)
+
+  // 防止文本选择
+  e.preventDefault()
+}
+
+const handleMouseMove = (e) => {
+  if (!isDragging.value || !scrollContainer.value) return
+
+  e.preventDefault()
+  const x = e.pageX - scrollContainer.value.offsetLeft
+  const walk = (x - startX.value) * 2 // 滚动速度
+  scrollContainer.value.scrollLeft = scrollLeft.value - walk
+}
+
+const handleMouseUp = () => {
+  isDragging.value = false
+
+  // 移除全局鼠标事件监听
+  document.removeEventListener('mousemove', handleMouseMove)
+  document.removeEventListener('mouseup', handleMouseUp)
+}
+
 const handleIconError = (event) => {
   // 图标加载失败时使用默认图标
   event.target.style.display = 'none'
@@ -246,6 +312,12 @@ const handleIconError = (event) => {
 
 // 页面加载时初始化数据
 onMounted(initializeData)
+
+// 页面卸载时清理事件监听
+onUnmounted(() => {
+  document.removeEventListener('mousemove', handleMouseMove)
+  document.removeEventListener('mouseup', handleMouseUp)
+})
 </script>
 
 <style scoped>
@@ -254,5 +326,23 @@ onMounted(initializeData)
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* 隐藏滚动条但保持滚动功能 */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+  background: transparent;
 }
 </style>
