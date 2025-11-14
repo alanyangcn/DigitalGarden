@@ -62,70 +62,54 @@
         </div>
 
         <!-- 数据展示 -->
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           <div
             v-for="link in links"
             :key="link.id"
-            class="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200"
-            @click="openLink(link.url, link.id)"
+            class="group bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 cursor-pointer"
+            @click="openLink(link.url)"
           >
-            <div class="p-6">
+            <div class="p-4">
               <!-- 网站图标和名称 -->
-              <div class="flex items-center mb-3">
-                <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
+              <div class="flex items-center mb-2">
+                <div class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center mr-2 group-hover:scale-105 transition-transform duration-200">
                   <img
                     v-if="link.icon"
                     :src="link.icon"
                     :alt="link.name"
-                    class="w-8 h-8 object-contain"
+                    class="w-6 h-6 object-contain"
                     @error="handleIconError"
                   />
                   <UIcon
                     v-else
                     :name="link.iconName || 'i-heroicons-globe-alt'"
-                    class="w-6 h-6 text-gray-400"
+                    class="w-5 h-5 text-gray-400"
                   />
                 </div>
                 <div class="flex-1 min-w-0">
-                  <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200 truncate">
+                  <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200 truncate text-sm">
                     {{ link.name }}
                   </h3>
-                  <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                    {{ link.category?.name || getCategoryName(link.category_id) }}
+                  <span class="text-xs text-gray-500 truncate">
+                    {{ link.domain }}
                   </span>
                 </div>
               </div>
 
               <!-- 网站描述 -->
-              <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+              <p class="text-gray-600 text-xs mb-2 line-clamp-1">
                 {{ link.description }}
               </p>
 
               <!-- 标签 -->
-              <div v-if="link.tags && link.tags.length > 0" class="flex flex-wrap gap-1 mb-4">
+              <div v-if="link.tags && link.tags.length > 0" class="flex flex-wrap gap-1">
                 <span
-                  v-for="tag in link.tags"
+                  v-for="tag in link.tags.slice(0, 3)"
                   :key="tag"
-                  class="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-md"
+                  class="text-xs bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded"
                 >
                   {{ tag }}
                 </span>
-              </div>
-
-              <!-- 访问按钮 -->
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-gray-400">
-                  {{ link.domain }}
-                </span>
-                <UButton
-                  size="xs"
-                  variant="ghost"
-                  color="primary"
-                  class="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                >
-                  <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-4 h-4" />
-                  访问
-                </UButton>
               </div>
             </div>
           </div>
@@ -160,7 +144,6 @@ const searchQuery = ref('')
 const selectedCategory = ref('all')
 const categories = ref([])
 const links = ref([])
-const stats = ref({})
 const loading = ref(true)
 const error = ref(null)
 
@@ -188,16 +171,6 @@ const fetchLinks = async (params = {}) => {
   }
 }
 
-// 获取统计信息
-const fetchStats = async () => {
-  try {
-    const { data } = await $fetch('/api/navigation/stats')
-    return data || {}
-  } catch (err) {
-    console.error('获取统计信息失败:', err)
-    return {}
-  }
-}
 
 // 初始化数据
 const initializeData = async () => {
@@ -205,11 +178,10 @@ const initializeData = async () => {
   error.value = null
 
   try {
-    // 并行获取所有数据
-    const [categoriesData, linksData, statsData] = await Promise.all([
+    // 并行获取分类和链接数据
+    const [categoriesData, linksData] = await Promise.all([
       fetchCategories(),
-      fetchLinks(),
-      fetchStats()
+      fetchLinks()
     ])
 
     // 在分类列表前添加"全部"选项
@@ -219,7 +191,6 @@ const initializeData = async () => {
     ]
 
     links.value = linksData
-    stats.value = statsData
   } catch (err) {
     error.value = '加载数据失败，请稍后重试'
     console.error('初始化数据失败:', err)
@@ -247,12 +218,9 @@ const updateLinks = async () => {
 watch([searchQuery, selectedCategory], updateLinks, { debounce: 300 })
 
 // 计算属性
-const totalLinks = computed(() => stats.value.totalLinks || 0)
+const totalLinks = computed(() => links.value.length)
 
 const lastUpdated = computed(() => {
-  if (stats.value.lastUpdated) {
-    return new Date(stats.value.lastUpdated).toLocaleDateString('zh-CN')
-  }
   return new Date().toLocaleDateString('zh-CN')
 })
 
@@ -262,22 +230,9 @@ const getCategoryName = (categoryId) => {
   return category ? category.name : '其他'
 }
 
-const openLink = async (url, linkId) => {
-  try {
-    // 记录点击次数
-    if (linkId) {
-      await $fetch(`/api/navigation/links/${linkId}/click`, {
-        method: 'POST'
-      })
-    }
-
-    // 打开链接
-    window.open(url, '_blank', 'noopener,noreferrer')
-  } catch (err) {
-    console.error('记录点击失败:', err)
-    // 即使记录失败也要打开链接
-    window.open(url, '_blank', 'noopener,noreferrer')
-  }
+const openLink = (url) => {
+  // 直接打开链接
+  window.open(url, '_blank', 'noopener,noreferrer')
 }
 
 const handleIconError = (event) => {
@@ -294,9 +249,9 @@ onMounted(initializeData)
 </script>
 
 <style scoped>
-.line-clamp-2 {
+.line-clamp-1 {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

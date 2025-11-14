@@ -7,8 +7,7 @@ import type {
   CreateCategoryRequest,
   UpdateCategoryRequest,
   GetLinksParams,
-  GetCategoriesParams,
-  NavigationStats
+  GetCategoriesParams
 } from '~/types/navigation'
 
 export class NavigationService {
@@ -205,7 +204,6 @@ export class NavigationService {
       tags: row.tags ? JSON.parse(row.tags) : [],
       domain: row.domain,
       sort_order: row.sort_order,
-      click_count: row.click_count,
       is_active: Boolean(row.is_active),
       created_at: row.created_at,
       updated_at: row.updated_at,
@@ -239,8 +237,8 @@ export class NavigationService {
     const domain = extractDomain(data.url)
 
     const result = await this.db.prepare(`
-      INSERT INTO navigation_links (name, url, description, icon, icon_name, category_id, tags, domain, sort_order, click_count, is_active, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO navigation_links (name, url, description, icon, icon_name, category_id, tags, domain, sort_order, is_active, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       data.name,
       data.url,
@@ -251,7 +249,6 @@ export class NavigationService {
       data.tags ? JSON.stringify(data.tags) : null,
       domain,
       data.sort_order || 0,
-      0,
       1, // 默认激活
       now
     ).run()
@@ -267,7 +264,6 @@ export class NavigationService {
       tags: data.tags,
       domain,
       sort_order: data.sort_order || 0,
-      click_count: 0,
       is_active: true,
       created_at: now
     }
@@ -315,11 +311,7 @@ export class NavigationService {
       updates.push('sort_order = ?')
       bindings.push(data.sort_order)
     }
-    if (data.click_count !== undefined) {
-      updates.push('click_count = ?')
-      bindings.push(data.click_count)
-    }
-    if (data.is_active !== undefined) {
+        if (data.is_active !== undefined) {
       updates.push('is_active = ?')
       bindings.push(data.is_active ? 1 : 0)
     }
@@ -346,43 +338,6 @@ export class NavigationService {
     ).bind(id).run()
 
     return result.changes > 0
-  }
-
-  /**
-   * 增加点击次数
-   */
-  async incrementClickCount(id: number): Promise<boolean> {
-    const result = await this.db.prepare(`
-      UPDATE navigation_links SET click_count = click_count + 1 WHERE id = ?
-    `).bind(id).run()
-
-    return result.changes > 0
-  }
-
-  // ========== 统计相关操作 ==========
-
-  /**
-   * 获取导航统计信息
-   */
-  async getStats(): Promise<NavigationStats> {
-    const [linksResult, categoriesResult] = await Promise.all([
-      this.db.prepare('SELECT COUNT(*) as count, SUM(click_count) as total_clicks FROM navigation_links WHERE is_active = 1').first(),
-      this.db.prepare('SELECT COUNT(*) as count FROM navigation_categories WHERE is_active = 1').first()
-    ])
-
-    const lastUpdatedResult = await this.db.prepare(`
-      SELECT MAX(updated_at) as last_updated FROM navigation_links
-      UNION
-      SELECT MAX(created_at) as last_updated FROM navigation_links
-      ORDER BY last_updated DESC LIMIT 1
-    `).first()
-
-    return {
-      totalLinks: linksResult?.count || 0,
-      totalCategories: categoriesResult?.count || 0,
-      totalClicks: linksResult?.total_clicks || 0,
-      lastUpdated: lastUpdatedResult?.last_updated || Date.now()
-    }
   }
 }
 

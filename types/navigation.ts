@@ -22,7 +22,6 @@ export interface NavigationLink {
   tags?: string[]
   domain: string
   sort_order: number
-  click_count: number
   is_active: boolean
   created_at: number
   updated_at?: number
@@ -45,7 +44,6 @@ export interface CreateLinkRequest {
 
 export interface UpdateLinkRequest extends Partial<CreateLinkRequest> {
   id: number
-  click_count?: number
   is_active?: boolean
 }
 
@@ -61,12 +59,6 @@ export interface UpdateCategoryRequest extends Partial<CreateCategoryRequest> {
   is_active?: boolean
 }
 
-export interface NavigationStats {
-  totalLinks: number
-  totalCategories: number
-  totalClicks: number
-  lastUpdated: number
-}
 
 // API 响应类型
 export interface ApiResponse<T = any> {
@@ -82,7 +74,7 @@ export interface GetLinksParams {
   search?: string
   limit?: number
   offset?: number
-  sort?: 'name' | 'created_at' | 'click_count' | 'sort_order'
+  sort?: 'name' | 'created_at' | 'sort_order'
   order?: 'asc' | 'desc'
   is_active?: boolean
 }

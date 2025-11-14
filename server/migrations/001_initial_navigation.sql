@@ -24,7 +24,6 @@ CREATE TABLE IF NOT EXISTS navigation_links (
   tags TEXT,  -- JSON 格式存储
   domain TEXT NOT NULL,
   sort_order INTEGER DEFAULT 0,
-  click_count INTEGER DEFAULT 0,
   is_active INTEGER DEFAULT 1,
   created_at INTEGER NOT NULL,
   updated_at INTEGER,
@@ -35,7 +34,6 @@ CREATE TABLE IF NOT EXISTS navigation_links (
 CREATE INDEX IF NOT EXISTS idx_navigation_links_category_id ON navigation_links(category_id);
 CREATE INDEX IF NOT EXISTS idx_navigation_links_is_active ON navigation_links(is_active);
 CREATE INDEX IF NOT EXISTS idx_navigation_links_sort_order ON navigation_links(sort_order);
-CREATE INDEX IF NOT EXISTS idx_navigation_links_click_count ON navigation_links(click_count);
 CREATE INDEX IF NOT EXISTS idx_navigation_links_created_at ON navigation_links(created_at);
 CREATE INDEX IF NOT EXISTS idx_navigation_links_domain ON navigation_links(domain);
 
