@@ -45,9 +45,6 @@ export default defineNuxtConfig({
     gray: 'slate'
   },
 
-  // SEO Configuration
-  css: ['~/assets/css/main.css'],
-
   // Route rules for admin authentication
   routeRules: {
     '/admin/**': {
