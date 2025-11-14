@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b">
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b">
       <div class="px-6 py-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <UButton to="/admin" variant="ghost" icon="i-lucide-arrow-left" />
-            <h1 class="text-2xl font-bold text-gray-900">Articles Management</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Articles Management</h1>
           </div>
           <UButton to="/admin/articles/new" color="primary">
             <Icon name="i-lucide-plus" class="w-4 h-4 mr-2" />
@@ -47,26 +47,26 @@
       <!-- Articles Table -->
       <UCard>
         <table class="w-full">
-          <thead class="bg-gray-50 border-b">
+          <thead class="bg-gray-50 dark:bg-gray-900 border-b">
             <tr>
-              <th class="text-left p-4 font-medium text-gray-700">Title</th>
-              <th class="text-left p-4 font-medium text-gray-700">Category</th>
-              <th class="text-left p-4 font-medium text-gray-700">Status</th>
-              <th class="text-left p-4 font-medium text-gray-700">Views</th>
-              <th class="text-left p-4 font-medium text-gray-700">Created</th>
-              <th class="text-left p-4 font-medium text-gray-700">Actions</th>
+              <th class="text-left p-4 font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600">Title</th>
+              <th class="text-left p-4 font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600">Category</th>
+              <th class="text-left p-4 font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600">Status</th>
+              <th class="text-left p-4 font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600">Views</th>
+              <th class="text-left p-4 font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600">Created</th>
+              <th class="text-left p-4 font-medium text-gray-700 dark:text-gray-300 dark:text-gray-600">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr
               v-for="article in filteredArticles"
               :key="article.id"
-              class="border-b hover:bg-gray-50"
+              class="border-b hover:bg-gray-50 dark:hover:bg-gray-700 dark:bg-gray-900"
             >
               <td class="p-4">
                 <div>
-                  <p class="font-medium text-gray-900">{{ article.title }}</p>
-                  <p class="text-sm text-gray-500">{{ article.excerpt }}</p>
+                  <p class="font-medium text-gray-900 dark:text-white">{{ article.title }}</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">{{ article.excerpt }}</p>
                 </div>
               </td>
               <td class="p-4">
@@ -79,8 +79,8 @@
                   {{ article.status }}
                 </UBadge>
               </td>
-              <td class="p-4 text-gray-600">{{ article.views.toLocaleString() }}</td>
-              <td class="p-4 text-gray-600">{{ article.created }}</td>
+              <td class="p-4 text-gray-600 dark:text-gray-400">{{ article.views.toLocaleString() }}</td>
+              <td class="p-4 text-gray-600 dark:text-gray-400">{{ article.created }}</td>
               <td class="p-4">
                 <div class="flex items-center space-x-2">
                   <UButton variant="ghost" size="sm" :to="`/articles/${article.slug}`" target="_blank">
@@ -102,9 +102,9 @@
 
         <!-- Empty State -->
         <div v-if="filteredArticles.length === 0" class="text-center py-12">
-          <Icon name="i-lucide-file-text" class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 class="text-lg font-semibold text-gray-700 mb-2">No articles found</h3>
-          <p class="text-gray-500 mb-4">Try adjusting your search or filters</p>
+          <Icon name="i-lucide-file-text" class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+          <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 dark:text-gray-600 mb-2">No articles found</h3>
+          <p class="text-gray-500 dark:text-gray-400 mb-4">Try adjusting your search or filters</p>
           <UButton to="/admin/articles/new" color="primary">
             Create your first article
           </UButton>
@@ -113,7 +113,7 @@
 
       <!-- Pagination -->
       <div v-if="filteredArticles.length > 0" class="flex justify-between items-center mt-6">
-        <p class="text-gray-600">
+        <p class="text-gray-600 dark:text-gray-400">
           Showing {{ (currentPage - 1) * 10 + 1 }} to {{ Math.min(currentPage * 10, filteredArticles.length) }} of {{ filteredArticles.length }} articles
         </p>
         <UPagination

@@ -1,6 +1,6 @@
 <template>
   <UApp>
-    <NuxtLayout>
+    <NuxtLayout :name="layoutName">
       <NuxtPage />
     </NuxtLayout>
   </UApp>
@@ -12,6 +12,17 @@ const { checkAuth } = useAuth()
 
 onMounted(async () => {
   await checkAuth()
+})
+
+// Dynamic layout selection based on route
+const route = useRoute()
+const layoutName = computed(() => {
+  // If current path starts with /admin, use admin layout
+  if (route.path.startsWith('/admin')) {
+    return 'admin'
+  }
+  // Otherwise use default layout
+  return 'default'
 })
 
 // SEO Meta for the entire app

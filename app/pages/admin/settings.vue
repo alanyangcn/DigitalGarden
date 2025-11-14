@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b">
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b">
       <div class="px-6 py-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <UButton to="/admin" variant="ghost" icon="i-lucide-arrow-left" />
-            <h1 class="text-2xl font-bold text-gray-900">Settings</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
           </div>
           <UButton color="primary" @click="saveSettings">
             Save Changes
@@ -19,12 +19,12 @@
       <!-- General Settings -->
       <UCard class="mb-6">
         <template #header>
-          <h3 class="text-lg font-semibold text-gray-900">General Settings</h3>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">General Settings</h3>
         </template>
 
         <div class="grid gap-6">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Site Title</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Site Title</label>
             <UInput
               v-model="settings.siteTitle"
               placeholder="Digital Garden"
@@ -33,7 +33,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Site Description</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Site Description</label>
             <UTextarea
               v-model="settings.siteDescription"
               placeholder="A beautiful space to cultivate your thoughts and share your knowledge."
@@ -42,7 +42,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Site URL</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Site URL</label>
             <UInput
               v-model="settings.siteUrl"
               placeholder="https://digitalgarden.com"
@@ -52,7 +52,7 @@
 
           <div class="grid md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Admin Email</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Admin Email</label>
               <UInput
                 v-model="settings.adminEmail"
                 type="email"
@@ -61,7 +61,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Timezone</label>
               <USelect
                 v-model="settings.timezone"
                 :options="timezoneOptions"
@@ -75,15 +75,15 @@
       <!-- Appearance Settings -->
       <UCard class="mb-6">
         <template #header>
-          <h3 class="text-lg font-semibold text-gray-900">Appearance</h3>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Appearance</h3>
         </template>
 
         <div class="grid gap-6">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Logo</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Logo</label>
             <div class="flex items-center space-x-4">
-              <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                <Icon name="i-lucide-image" class="w-8 h-8 text-gray-400" />
+              <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                <Icon name="i-lucide-image" class="w-8 h-8 text-gray-400 dark:text-gray-600" />
               </div>
               <UButton variant="outline" icon="i-lucide-upload">
                 Upload Logo
@@ -92,10 +92,10 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Favicon</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Favicon</label>
             <div class="flex items-center space-x-4">
-              <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
-                <Icon name="i-lucide-star" class="w-6 h-6 text-gray-400" />
+              <div class="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                <Icon name="i-lucide-star" class="w-6 h-6 text-gray-400 dark:text-gray-600" />
               </div>
               <UButton variant="outline" size="sm" icon="i-lucide-upload">
                 Upload Favicon
@@ -104,7 +104,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Theme Color</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Theme Color</label>
             <div class="flex items-center space-x-4">
               <div class="flex space-x-2">
                 <button
@@ -127,7 +127,7 @@
 
           <div class="grid md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Theme Mode</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Theme Mode</label>
               <USelect
                 v-model="settings.themeMode"
                 :options="themeModeOptions"
@@ -135,7 +135,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Font Family</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Font Family</label>
               <USelect
                 v-model="settings.fontFamily"
                 :options="fontFamilyOptions"
@@ -148,12 +148,12 @@
       <!-- Blog Settings -->
       <UCard class="mb-6">
         <template #header>
-          <h3 class="text-lg font-semibold text-gray-900">Blog Settings</h3>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Blog Settings</h3>
         </template>
 
         <div class="grid gap-6">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Posts per Page</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Posts per Page</label>
             <UInput
               v-model="settings.postsPerPage"
               type="number"
@@ -163,7 +163,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Default Category</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Default Category</label>
             <USelect
               v-model="settings.defaultCategory"
               :options="categoryOptions"
@@ -173,27 +173,27 @@
           <div class="space-y-4">
             <div class="flex items-center space-x-4">
               <UCheckbox v-model="settings.enableComments" />
-              <label class="text-sm font-medium text-gray-700">Enable Comments</label>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Enable Comments</label>
             </div>
 
             <div class="flex items-center space-x-4">
               <UCheckbox v-model="settings.moderateComments" />
-              <label class="text-sm font-medium text-gray-700">Moderate Comments</label>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Moderate Comments</label>
             </div>
 
             <div class="flex items-center space-x-4">
               <UCheckbox v-model="settings.enableRSS" />
-              <label class="text-sm font-medium text-gray-700">Enable RSS Feed</label>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Enable RSS Feed</label>
             </div>
 
             <div class="flex items-center space-x-4">
               <UCheckbox v-model="settings.showAuthor" />
-              <label class="text-sm font-medium text-gray-700">Show Author Information</label>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Show Author Information</label>
             </div>
 
             <div class="flex items-center space-x-4">
               <UCheckbox v-model="settings.showReadingTime" />
-              <label class="text-sm font-medium text-gray-700">Show Reading Time</label>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Show Reading Time</label>
             </div>
           </div>
         </div>
@@ -202,12 +202,12 @@
       <!-- SEO Settings -->
       <UCard class="mb-6">
         <template #header>
-          <h3 class="text-lg font-semibold text-gray-900">SEO Settings</h3>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">SEO Settings</h3>
         </template>
 
         <div class="grid gap-6">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Meta Title Template</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Meta Title Template</label>
             <UInput
               v-model="settings.metaTitleTemplate"
               placeholder="%title% - Digital Garden"
@@ -215,7 +215,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Meta Description Template</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Meta Description Template</label>
             <UTextarea
               v-model="settings.metaDescriptionTemplate"
               placeholder="%description%"
@@ -226,22 +226,22 @@
           <div class="space-y-4">
             <div class="flex items-center space-x-4">
               <UCheckbox v-model="settings.enableSitemap" />
-              <label class="text-sm font-medium text-gray-700">Generate XML Sitemap</label>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Generate XML Sitemap</label>
             </div>
 
             <div class="flex items-center space-x-4">
               <UCheckbox v-model="settings.enableRobots" />
-              <label class="text-sm font-medium text-gray-700">Generate robots.txt</label>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Generate robots.txt</label>
             </div>
 
             <div class="flex items-center space-x-4">
               <UCheckbox v-model="settings.enableStructuredData" />
-              <label class="text-sm font-medium text-gray-700">Enable Structured Data</label>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Enable Structured Data</label>
             </div>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Google Analytics</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Google Analytics</label>
             <UInput
               v-model="settings.googleAnalytics"
               placeholder="G-XXXXXXXXXX"
@@ -253,13 +253,13 @@
       <!-- Social Media Settings -->
       <UCard>
         <template #header>
-          <h3 class="text-lg font-semibold text-gray-900">Social Media</h3>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Social Media</h3>
         </template>
 
         <div class="grid gap-6">
           <div class="grid md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Twitter URL</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Twitter URL</label>
               <UInput
                 v-model="social.twitter"
                 placeholder="https://twitter.com/digitalgarden"
@@ -267,7 +267,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Facebook URL</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Facebook URL</label>
               <UInput
                 v-model="social.facebook"
                 placeholder="https://facebook.com/digitalgarden"
@@ -275,7 +275,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">LinkedIn URL</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">LinkedIn URL</label>
               <UInput
                 v-model="social.linkedin"
                 placeholder="https://linkedin.com/company/digitalgarden"
@@ -283,7 +283,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">GitHub URL</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">GitHub URL</label>
               <UInput
                 v-model="social.github"
                 placeholder="https://github.com/digitalgarden"

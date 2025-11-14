@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b">
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b">
       <div class="px-6 py-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <UButton to="/admin/articles" variant="ghost" icon="i-lucide-arrow-left" />
-            <h1 class="text-2xl font-bold text-gray-900">Create New Article</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Create New Article</h1>
           </div>
           <div class="flex items-center space-x-4">
             <UButton variant="outline">
@@ -25,12 +25,12 @@
         <!-- Basic Information -->
         <UCard>
           <template #header>
-            <h3 class="text-lg font-semibold text-gray-900">Basic Information</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Basic Information</h3>
           </template>
 
           <div class="grid gap-6">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Title</label>
               <UInput
                 v-model="article.title"
                 placeholder="Enter article title"
@@ -40,7 +40,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Slug</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Slug</label>
               <UInput
                 v-model="article.slug"
                 placeholder="article-slug"
@@ -51,7 +51,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Excerpt</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Excerpt</label>
               <UTextarea
                 v-model="article.excerpt"
                 placeholder="Brief description of the article"
@@ -62,7 +62,7 @@
 
             <div class="grid md:grid-cols-2 gap-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Category</label>
                 <USelect
                   v-model="article.category"
                   :options="categoryOptions"
@@ -72,7 +72,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
                 <USelect
                   v-model="article.status"
                   :options="statusOptions"
@@ -83,10 +83,10 @@
 
             <div class="grid md:grid-cols-2 gap-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Featured Image</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Featured Image</label>
                 <div class="flex items-center space-x-4">
-                  <div class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center">
-                    <Icon name="i-lucide-image" class="w-8 h-8 text-gray-400" />
+                  <div class="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                    <Icon name="i-lucide-image" class="w-8 h-8 text-gray-400 dark:text-gray-600" />
                   </div>
                   <UButton variant="outline" icon="i-lucide-upload">
                     Upload Image
@@ -95,7 +95,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
                 <UInput
                   v-model="tagInput"
                   placeholder="Add tags (press Enter)"
@@ -122,7 +122,7 @@
         <UCard>
           <template #header>
             <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900">Content</h3>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Content</h3>
               <div class="flex items-center space-x-2">
                 <UButton variant="ghost" size="sm" icon="i-lucide-bold" />
                 <UButton variant="ghost" size="sm" icon="i-lucide-italic" />
@@ -136,7 +136,7 @@
           <div class="grid md:grid-cols-2 gap-6">
             <!-- Markdown Editor -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Markdown</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Markdown</label>
               <UTextarea
                 v-model="article.content"
                 placeholder="Write your article content in Markdown..."
@@ -148,12 +148,12 @@
 
             <!-- Preview -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Preview</label>
-              <div class="border rounded-lg p-4 h-96 overflow-auto bg-gray-50">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Preview</label>
+              <div class="border rounded-lg p-4 h-96 overflow-auto bg-gray-50 dark:bg-gray-900">
                 <div v-if="article.content" class="prose prose-sm max-w-none">
                   <p v-if="article.content">{{ article.content }}</p>
                 </div>
-                <p v-else class="text-gray-500 italic">Preview will appear here...</p>
+                <p v-else class="text-gray-500 dark:text-gray-400 italic">Preview will appear here...</p>
               </div>
             </div>
           </div>
@@ -162,33 +162,33 @@
         <!-- SEO Settings -->
         <UCard>
           <template #header>
-            <h3 class="text-lg font-semibold text-gray-900">SEO Settings</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">SEO Settings</h3>
           </template>
 
           <div class="grid gap-6">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Meta Title</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Meta Title</label>
               <UInput
                 v-model="article.seo.title"
                 placeholder="SEO title (leave blank to use article title)"
                 maxlength="60"
               />
-              <p class="text-sm text-gray-500 mt-1">{{ article.seo.title.length }}/60 characters</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ article.seo.title.length }}/60 characters</p>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Meta Description</label>
               <UTextarea
                 v-model="article.seo.description"
                 placeholder="SEO description (leave blank to use article excerpt)"
                 :rows="3"
                 maxlength="160"
               />
-              <p class="text-sm text-gray-500 mt-1">{{ article.seo.description.length }}/160 characters</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ article.seo.description.length }}/160 characters</p>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Focus Keyword</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Focus Keyword</label>
               <UInput
                 v-model="article.seo.keyword"
                 placeholder="Main keyword for SEO"
@@ -200,22 +200,22 @@
         <!-- Publish Settings -->
         <UCard>
           <template #header>
-            <h3 class="text-lg font-semibold text-gray-900">Publish Settings</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Publish Settings</h3>
           </template>
 
           <div class="grid gap-6">
             <div class="flex items-center space-x-4">
               <UCheckbox v-model="article.isFeatured" />
-              <label class="text-sm font-medium text-gray-700">Featured Article</label>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Featured Article</label>
             </div>
 
             <div class="flex items-center space-x-4">
               <UCheckbox v-model="article.allowComments" />
-              <label class="text-sm font-medium text-gray-700">Allow Comments</label>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Allow Comments</label>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Publish Date</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Publish Date</label>
               <UInput
                 v-model="article.publishDate"
                 type="datetime-local"

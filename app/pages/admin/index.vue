@@ -1,102 +1,10 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <!-- Admin Header -->
-    <header class="bg-white shadow-sm border-b">
-      <div class="px-6 py-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <UBadge color="green" variant="soft">Admin</UBadge>
-          </div>
-          <div class="flex items-center space-x-4">
-            <UButton variant="ghost">
-              <Icon name="i-lucide-bell" class="w-5 h-5" />
-            </UButton>
-            <UDropdown :items="userMenuItems">
-              <UButton variant="ghost" class="flex items-center space-x-2">
-                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
-                  A
-                </div>
-                <span>Admin</span>
-                <Icon name="i-lucide-chevron-down" class="w-4 h-4" />
-              </UButton>
-            </UDropdown>
-          </div>
-        </div>
-      </div>
-    </header>
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-800 dark:bg-gray-900">
+
 
     <div class="flex">
       <!-- Sidebar Navigation -->
-      <aside class="w-64 bg-white shadow-sm h-screen sticky top-0">
-        <nav class="p-4 space-y-2">
-          <UButton
-            to="/admin"
-            variant="ghost"
-            class="w-full justify-start"
-            active
-          >
-            <Icon name="i-lucide-layout-dashboard" class="w-5 h-5 mr-3" />
-            Dashboard
-          </UButton>
-          <UButton
-            to="/admin/articles"
-            variant="ghost"
-            class="w-full justify-start"
-          >
-            <Icon name="i-lucide-file-text" class="w-5 h-5 mr-3" />
-            Articles
-            <UBadge class="ml-auto">{{ stats.articles }}</UBadge>
-          </UButton>
-          <UButton
-            to="/admin/categories"
-            variant="ghost"
-            class="w-full justify-start"
-          >
-            <Icon name="i-lucide-folders" class="w-5 h-5 mr-3" />
-            Categories
-          </UButton>
-          <UButton
-            to="/admin/media"
-            variant="ghost"
-            class="w-full justify-start"
-          >
-            <Icon name="i-lucide-image" class="w-5 h-5 mr-3" />
-            Media Library
-          </UButton>
-          <UButton
-            to="/admin/comments"
-            variant="ghost"
-            class="w-full justify-start"
-          >
-            <Icon name="i-lucide-message-square" class="w-5 h-5 mr-3" />
-            Comments
-          </UButton>
-          <UButton
-            to="/admin/users"
-            variant="ghost"
-            class="w-full justify-start"
-          >
-            <Icon name="i-lucide-users" class="w-5 h-5 mr-3" />
-            Users
-          </UButton>
-          <UButton
-            to="/admin/settings"
-            variant="ghost"
-            class="w-full justify-start"
-          >
-            <Icon name="i-lucide-settings" class="w-5 h-5 mr-3" />
-            Settings
-          </UButton>
-        </nav>
-
-        <div class="absolute bottom-0 w-full p-4 border-t">
-          <UButton to="/" variant="ghost" class="w-full justify-start">
-            <Icon name="i-lucide-home" class="w-5 h-5 mr-3" />
-            Back to Site
-          </UButton>
-        </div>
-      </aside>
+      
 
       <!-- Main Content -->
       <main class="flex-1 p-6">
@@ -105,8 +13,8 @@
           <UCard>
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-sm font-medium text-gray-600">Total Articles</p>
-                <p class="text-2xl font-bold text-gray-900">{{ stats.articles }}</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Total Articles</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.articles }}</p>
               </div>
               <div class="bg-blue-100 rounded-lg p-3">
                 <Icon name="i-lucide-file-text" class="w-6 h-6 text-blue-600" />
@@ -117,8 +25,8 @@
           <UCard>
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-sm font-medium text-gray-600">Total Views</p>
-                <p class="text-2xl font-bold text-gray-900">{{ stats.views.toLocaleString() }}</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Total Views</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.views.toLocaleString() }}</p>
               </div>
               <div class="bg-green-100 rounded-lg p-3">
                 <Icon name="i-lucide-eye" class="w-6 h-6 text-green-600" />
@@ -129,8 +37,8 @@
           <UCard>
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-sm font-medium text-gray-600">Comments</p>
-                <p class="text-2xl font-bold text-gray-900">{{ stats.comments }}</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Comments</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.comments }}</p>
               </div>
               <div class="bg-purple-100 rounded-lg p-3">
                 <Icon name="i-lucide-message-square" class="w-6 h-6 text-purple-600" />
@@ -141,8 +49,8 @@
           <UCard>
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-sm font-medium text-gray-600">Users</p>
-                <p class="text-2xl font-bold text-gray-900">{{ stats.users }}</p>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Users</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.users }}</p>
               </div>
               <div class="bg-orange-100 rounded-lg p-3">
                 <Icon name="i-lucide-users" class="w-6 h-6 text-orange-600" />
@@ -156,7 +64,7 @@
           <!-- Recent Activity -->
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold text-gray-900">Recent Activity</h3>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
             </template>
             <div class="space-y-4">
               <div
@@ -170,8 +78,8 @@
                   </div>
                 </div>
                 <div class="flex-1">
-                  <p class="text-sm text-gray-900">{{ activity.description }}</p>
-                  <p class="text-xs text-gray-500">{{ activity.time }}</p>
+                  <p class="text-sm text-gray-900 dark:text-white">{{ activity.description }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ activity.time }}</p>
                 </div>
               </div>
             </div>
@@ -180,7 +88,7 @@
           <!-- Quick Actions -->
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Quick Actions</h3>
             </template>
             <div class="grid grid-cols-2 gap-4">
               <UButton to="/admin/articles/new" variant="outline" class="flex-col h-20">
@@ -208,17 +116,17 @@
           <!-- Page Views Chart -->
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold text-gray-900">Page Views (Last 7 Days)</h3>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Page Views (Last 7 Days)</h3>
             </template>
-            <div class="h-64 flex items-center justify-center bg-gray-50 rounded">
-              <p class="text-gray-500">Chart placeholder - Views trending up 25%</p>
+            <div class="h-64 flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded">
+              <p class="text-gray-500 dark:text-gray-400">Chart placeholder - Views trending up 25%</p>
             </div>
           </UCard>
 
           <!-- Popular Articles -->
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold text-gray-900">Popular Articles</h3>
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Popular Articles</h3>
             </template>
             <div class="space-y-3">
               <div
@@ -227,10 +135,10 @@
                 class="flex items-center justify-between"
               >
                 <div class="flex-1">
-                  <p class="text-sm font-medium text-gray-900">{{ article.title }}</p>
-                  <p class="text-xs text-gray-500">{{ article.views }} views</p>
+                  <p class="text-sm font-medium text-gray-900 dark:text-white">{{ article.title }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ article.views }} views</p>
                 </div>
-                <div class="w-24 bg-gray-200 rounded-full h-2">
+                <div class="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                   <div
                     class="bg-blue-500 h-2 rounded-full"
                     :style="`width: ${article.percentage}%`"
@@ -333,6 +241,6 @@ const getActivityIconClass = (type) => {
     user: 'bg-purple-100 text-purple-600',
     media: 'bg-orange-100 text-orange-600'
   }
-  return classes[type] || 'bg-gray-100 text-gray-600'
+  return classes[type] || 'bg-gray-100 text-gray-600 dark:text-gray-300'
 }
 </script>
