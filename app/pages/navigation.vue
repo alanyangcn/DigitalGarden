@@ -1,24 +1,5 @@
 <template>
-  <!-- 页面头部 -->
-  <section class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
-    <div class="container mx-auto px-4 text-center">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4">网址导航</h1>
-      <p class="text-xl mb-8 text-blue-100">精选实用网站，让您的网络生活更便捷</p>
-
-      <!-- 搜索框 -->
-      <div class="max-w-2xl mx-auto">
-        <UInput
-          v-model="searchQuery"
-          size="xl"
-          placeholder="搜索网站..."
-          icon="i-heroicons-magnifying-glass"
-          class="bg-white/20 backdrop-blur-sm border-white/30 text-white placeholder-white/70"
-        />
-      </div>
-    </div>
-  </section>
-
-    <!-- 分类筛选 -->
+  <!-- 分类筛选 -->
     <section class="sticky top-0 z-10 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4 backdrop-blur-sm bg-white/95 dark:bg-gray-800/95">
       <div class="container mx-auto px-4">
         <div class="relative">

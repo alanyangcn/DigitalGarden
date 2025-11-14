@@ -35,8 +35,8 @@
             :icon="colorMode.value === 'dark' ? 'i-heroicons-sun' : 'i-heroicons-moon'"
             variant="ghost"
             :color="colorMode.value === 'dark' ? 'white' : 'gray'"
-            size="sm"
-            class="hover:bg-gray-100 dark:hover:bg-gray-700"
+            size="lg"
+            class="w-11 h-11 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center"
             @click="toggleColorMode"
           />
 
@@ -44,9 +44,9 @@
           <UButton
             icon="i-heroicons-bars-3"
             variant="ghost"
-            color="gray"
-            size="sm"
-            class="md:hidden"
+            :color="colorMode.value === 'dark' ? 'white' : 'gray'"
+            size="lg"
+            class="md:hidden w-11 h-11 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-center"
             @click="mobileMenuOpen = !mobileMenuOpen"
           />
         </div>
